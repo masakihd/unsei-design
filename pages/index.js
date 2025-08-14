@@ -1,3 +1,7 @@
+import dynamic from 'next/dynamic';
+const LeafletMap = dynamic(() => import('../components/LeafletMap'), { ssr: false });
+
+
 import React, { useEffect, useMemo, useState } from "react";
 
 /**
@@ -698,6 +702,25 @@ export default function App() {
             )}
           </>
         )}
+
+{/* 方位（地図） */}
+{tab === "directions" && (
+  <section className={`${panelClass} p-6 sm:p-8`}>
+    <div className="mb-2 text-sm text-neutral-500">
+      方位タブ：地図を表示します（座標未設定時は東京駅を仮表示）。
+    </div>
+
+    {/* 高さのある箱でLeafletを包む（高さが無いと地図が見えません） */}
+    <div className="h-[420px] rounded-xl overflow-hidden border border-neutral-200">
+      {/* 位置指定が無い場合は LeafletMap 側のデフォルト中心が使われます */}
+      <LeafletMap lat={35.681236} lng={139.767125} zoom={15} />
+      {/*
+        もし緯度経度を持っているなら、こう書き換えます：
+        <LeafletMap lat={latitude} lng={longitude} zoom={12} />
+      */}
+    </div>
+  </section>
+)}
 
         <footer className="mx-auto mt-6 flex items-center justify-between text-xs text-neutral-500">
           <div>© 運勢デザイン – Prototype v0.4-fix3</div>
