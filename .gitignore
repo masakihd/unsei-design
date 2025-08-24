@@ -4,3 +4,5 @@ pages/index_working_*.js
 
 backups/**
 backup/**
+backups/_outgoing/
+backups/_stage/

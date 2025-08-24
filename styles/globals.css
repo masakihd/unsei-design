@@ -4,3 +4,8 @@
 
 /* ベース調整 */
 html, body, #__next { height: 100%; }
+
+/* --- guard: hide onboarding UI on Home --- */
+[data-testid="btn-open-onboarding"],
+section[data-section="home-intro"] { display: none !important; }
+/* --- end guard --- */
