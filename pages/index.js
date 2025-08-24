@@ -745,8 +745,8 @@ export default function App() {
   const [place, setPlace] = useState("");
   const [gender, setGender] = useState("未選択");
   const [registered, setRegistered] = useState(false);
-
-  // UI
+  // 未登録のときは初期表示を友達タブへ寄せる（ホームに「はじめに」が混ざらないように）
+  useEffect(() => { if (!registered) setTab("friends"); }, [registered]);// UI
   const [tab, setTab] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -1474,7 +1474,7 @@ export default function App() {
                 </div>
 
                 {/* 一覧 & 詳細 */}
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <div className="mt-4 grid gap-4 grid-cols-1">
                   {/* 一覧 */}
                   <div className="rounded-xl border border-neutral-200 bg-white shadow-sm p-4">
                     <div className="mb-2 text-sm text-neutral-500">友達一覧（{displayFriends.length} / {friends.length}件）</div>
@@ -1769,6 +1769,9 @@ export default function App() {
     </div>
   );
 }
+
+
+
 
 
 
