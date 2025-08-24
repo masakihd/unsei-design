@@ -1,54 +1,60 @@
 // components/LeafletMap.jsx
-'use client';
+import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic";
+import L from "leaflet";
+import { useMemo } from "react";
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-// ※ LeafletのCSSは pages/_app.js で読み込んでいる前提（ここでは読み込まない）
-
-// デフォルトのピン画像をNextでも表示できるように差し替え
-const iconUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png';
-const iconRetinaUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png';
-const shadowUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png';
-
-L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
-
-const defaultIcon = L.icon({
-  iconUrl,
-  iconRetinaUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((m) => m.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((m) => m.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import("react-leaflet").then((m) => m.Marker),
+  { ssr: false }
+);
+const Popup = dynamic(
+  () => import("react-leaflet").then((m) => m.Popup),
+  { ssr: false }
+);
 
 export default function LeafletMap({
-  lat = 35.681236,
-  lng = 139.767125,
+  center = [35.681236, 139.767125], // 東京駅
   zoom = 12,
-  style = { height: '100%', width: '100%' },
-  markers = [],
+  markers = [{ position: [35.681236, 139.767125], label: "Tokyo Station" }],
+  height = 360,
 }) {
-  // サーバー側では描画しない
-  if (typeof window === 'undefined') return null;
+  // マーカーピンを /public/leaflet 配下から確実に配信する
+  const defaultIcon = useMemo(() => {
+    return L.icon({
+      iconUrl: "/leaflet/marker-icon.png",
+      iconRetinaUrl: "/leaflet/marker-icon-2x.png",
+      shadowUrl: "/leaflet/marker-shadow.png",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
+    });
+  }, []);
 
-  const center = [lat, lng];
+  const style = { width: "100%", height };
 
   return (
-    <MapContainer center={center} zoom={zoom} style={style} scrollWheelZoom>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {markers.map((m, i) => (
-        <Marker key={i} position={m.position} icon={defaultIcon}>
-          {m.label ? <Popup>{m.label}</Popup> : null}
-        </Marker>
-      ))}
-      <Marker position={center} icon={defaultIcon}>
-        <Popup>中心地点</Popup>
-      </Marker>
-    </MapContainer>
+    <div style={style}>
+      <MapContainer center={center} zoom={zoom} scrollWheelZoom style={style}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/">OSM</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {markers.map((m, i) => (
+          <Marker key={i} position={m.position} icon={defaultIcon}>
+            {m.label && <Popup>{m.label}</Popup>}
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
   );
 }
