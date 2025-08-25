@@ -971,25 +971,20 @@ export default function App() {
 
           </div>
         
-          <a href="/onboarding" data-testid="btn-open-onboarding" className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-[#3c5768] text-white hover:opacity-90 transition">はじめに</a>
           <a href="/profile" data-testid="link-profile" className="inline-flex items-center gap-2 rounded-xl px-3 py-2 border border-gray-300 bg-white hover:bg-gray-50 transition">プロフィール</a>
 </header>
 
         {!registered ? (
   <section className={`${panelClass} p-6 sm:p-8`}>
     <div className="mb-4">
-      <div className={titleClass}>はじめに</div>
       <p className="mt-1 text-sm text-neutral-600 leading-7">
-        初回登録は「はじめに」ページで行います。
       </p>
     </div>
     <a
       href="/onboarding"
-      data-testid="btn-open-onboarding"
       className="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-md hover:shadow-lg"
       style={{ backgroundColor: 'var(--accent)' }}
     >
-      はじめにへ（登録に進む）
     </a>
   </section>
 ) : (
@@ -1789,6 +1784,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
