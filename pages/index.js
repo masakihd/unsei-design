@@ -936,8 +936,9 @@ export default function App() {
         return 0;
       });
     }
-    const q = friendSearch.trim();
-    if (q) { arr = arr.filter(f => (f.name||"").includes(q)); }
+    const hira = (s) => (s || "").replace(/[ァ-ン]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+const norm = (s) => hira(String(s || "")).toLowerCase().replace(/\s+/g,"");
+const q = norm(friendSearch);if (q) { arr = arr.filter(f => norm(f.name).includes(q) || norm(f.yomi).includes(q)); }
     return arr;
   }, [friends, friendSearch, friendSort]);
 // HOMEの指定日時遷移（簡易）
@@ -1785,6 +1786,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
