@@ -926,6 +926,16 @@ export default function App() {
     } else if (friendSort === "性別") {
       arr.sort((a,b)=>(a.gender||"").localeCompare(b.gender||"","ja"));
     }
+    else if (friendSort === "生年月日順") {
+      arr.sort((a, b) => {
+        const ad = (a?.dob || "").toString();
+        const bd = (b?.dob || "").toString();
+        if (ad && bd) return ad.localeCompare(bd); // "YYYY-MM-DD" 文字比較で昇順
+        if (ad) return -1;
+        if (bd) return 1;
+        return 0;
+      });
+    }
     const q = friendSearch.trim();
     if (q) { arr = arr.filter(f => (f.name||"").includes(q)); }
     return arr;
@@ -1479,7 +1489,13 @@ export default function App() {
                   <div className="rounded-xl border border-neutral-200 bg-white shadow-sm p-4">
                     <div className="mb-2 text-sm text-neutral-500">友達一覧（{displayFriends.length} / {friends.length}件）</div>
 <div className="mb-3 flex flex-col sm:flex-row sm:items-center gap-2">
+  <div className="flex flex-wrap items-center gap-2">
   <input data-testid="friends-search" type="text" placeholder="検索" className="w-full sm:w-48 rounded-lg border border-neutral-300 bg-neutral-100 p-2 text-sm" value={friendSearch} onChange={(e)=>setFriendSearch(e.target.value)} />
+  <select data-testid="friends-sort" className="rounded-lg border border-neutral-300 bg-white p-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-[#3c5768]" value={friendSort} onChange={(e)=>setFriendSort(e.target.value)}>
+    <option>登録順</option>
+    <option>生年月日順</option>
+  </select>
+</div>
 </div>
                     {friends.length === 0 ? (
                       <div className="text-sm text-neutral-500">まだ登録がありません。</div>
@@ -1769,6 +1785,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
