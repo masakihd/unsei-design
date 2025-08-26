@@ -916,9 +916,33 @@ export default function App() {
     () => friends.find((f) => f.id === selectedFriendId) || null,
     [friends, selectedFriendId]
   );
-
-  
-  // 表示用：検索・並び順を反映
+  // --- friends search helpers (kana aware) ---
+  function normalizeJa(str) {
+    try {
+      return (str || "")
+        .toString()
+        .normalize('NFKC')
+        .toLowerCase()
+        .replace(/[ァ-ン]/g, s => String.fromCharCode(s.charCodeAt(0) - 0x60)); // カナ→ひらがな
+    } catch { return (str || ""); }
+  }
+  function friendYomi(f) {
+    if (f?.yomi) return normalizeJa(f.yomi);
+    const n = (f?.name || "");
+    const table = {
+      "高木花子":"たかぎはなこ","高木":"たかぎ",
+      "伊藤一郎":"いとういちろう","伊藤":"いとう",
+      "赤井花子":"あかいはなこ","赤井":"あかい",
+      "森本花子":"もりもとはなこ","森本":"もりもと",
+      "米山一郎":"よねやまいちろう","米山":"よねやま",
+      "佐藤一郎":"さとういちろう","佐藤":"さとう",
+      "花子":"はなこ","一郎":"いちろう"
+    };
+    const hit = Object.keys(table).find(k => n.includes(k));
+    return normalizeJa(hit ? table[hit] : n);
+  }
+  // --- end helpers ---
+// 表示用：検索・並び順を反映
   const displayFriends = useMemo(() => {
     let arr = [...friends];
     if (friendSort === "あいうえお順") {
@@ -940,9 +964,16 @@ export default function App() {
         return 0;
       });
     }
-    const q = friendSearch.trim();
-    if (q) { arr = arr.filter(f => (f.name||"").includes(q)); }
-    return arr;
+    const qraw = friendSearch.trim();
+const q = normalizeJa(qraw);
+if (q) {
+  arr = arr.filter((f) => {
+    const nameN = normalizeJa(f.name || "");
+    const yomiN = friendYomi(f);
+    return nameN.includes(q) || yomiN.includes(q);
+  });
+}
+return arr;
   }, [friends, friendSearch, friendSort]);
 // HOMEの指定日時遷移（簡易）
   const [qTime, setQTime] = useState("12:00");
@@ -1784,6 +1815,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
