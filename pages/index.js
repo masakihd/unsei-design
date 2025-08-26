@@ -1530,9 +1530,9 @@ return arr;
                     {friends.length === 0 ? (
                       <div className="text-sm text-neutral-500">まだ登録がありません。</div>
                     ) : (
-                      <div data-testid="friends-list" className="grid gap-2" style={{ maxHeight: 440, overflowY: "auto" }}>
+                      <div data-testid="friends-list" className="grid gap-2" style={{ height: 300, overflowY: "auto" }}>
                         {displayFriends.map((f) => (
-                          <div data-testid="friend-card" key={f.id} className="flex items-center justify-between rounded-lg border border-neutral-300 bg-neutral-50 p-2">
+                          <div data-testid="friend-card" key={f.id} className="flex items-center justify-between rounded-lg border border-neutral-300 bg-neutral-50 p-2" style={{ minHeight: 56 }}>
                             <button
                               className="text-sm underline underline-offset-4"
                               onClick={() => selectFriend(f.id)}
@@ -1609,7 +1609,7 @@ return arr;
           <div className="absolute inset-0 bg-black/40" onClick={() => setMenuOpen(false)} />
           <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl bg-white shadow-xl ring-1 ring-neutral-300 p-4">
             <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-neutral-300" />
-            <div data-testid="friends-list" className="grid gap-2" style={{ maxHeight: 440, overflowY: "auto" }}>
+            <div data-testid="friends-list" className="grid gap-2" style={{ height: 300, overflowY: "auto" }}>
               {[
                 ["home", "ホーム"],
                 ["daily", "今日の運勢"],
@@ -1815,6 +1815,7 @@ return arr;
     </div>
   );
 }
+
 
 
 
