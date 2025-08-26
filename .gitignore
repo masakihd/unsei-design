@@ -6,3 +6,8 @@ backups/**
 backup/**
 backups/_outgoing/
 backups/_stage/
+
+# ignore backup zips
+backup/
+backups/
+*.zip
